@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef} from 'react';
+import React, { useCallback, useEffect, useState, useRef, useMemo} from 'react';
 
 import { useWindowSize } from '../../utils';
 
@@ -29,7 +29,38 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
 	    if (!!rect) {
             setTranslation(translation + rect?.width);
         }
-	}, [translation, rect])
+    }, [translation, rect])
+    
+    if (!!rect) {
+        console.log();
+    }
+
+    const childrenBlocks: Array<Array<React.ReactChild>> | undefined = useMemo(() => {
+        if (!!rect && children.length > 1) {
+            const childrenPerBlock = Math.floor((rect.width - 128) / rect.height);
+            const blockArray: Array<Array<React.ReactChild>> = [];
+
+            let currentBlock: Array<React.ReactChild> = [];
+
+            children.forEach((child, i) => {
+                const fraction = i / childrenPerBlock;
+                if (fraction < blockArray.length + 1) {
+                    currentBlock.push(child);
+                } else {
+                    blockArray.push(currentBlock);
+                    currentBlock = [child];
+                }
+            })
+
+            if (currentBlock.length >= 1) {
+                blockArray.push(currentBlock);
+            }
+
+            return blockArray;
+        }
+    }, [rect, children])
+
+    console.log(childrenBlocks);
     
     return ( 
         <div className='w-full h-full relative overflow-hidden' ref={galleryWrapper}> 
@@ -40,7 +71,9 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
 					WebkitTransform: `translate(${translation}px, 0)`
 	            }}
 	         >
-	            {children}
+	            {
+                    children
+                }
 	        </div>
             <div 
                 className='absolute left-0 top-0 bottom-0 px-2 flex items-center'
