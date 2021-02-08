@@ -1,4 +1,7 @@
-import React, { useCallback, useEffect, useState, useRef, useMemo} from 'react';
+import React, { useEffect, useState, useRef, useMemo} from 'react';
+
+import { ReactComponent as LeftArrow } from '../../assets/icons/left-arrow.svg';
+import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 
 import { useWindowSize } from '../../utils';
 
@@ -77,7 +80,12 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
                 <div 
                     className={`absolute left-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index <= 0 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
-                    <div className='rounded-full w-12 h-12 bg-purple-300' onClick={() => setIndex(index - 1)} />
+                    <div 
+                        className='rounded-full w-12 h-12 bg-gray-200 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
+                        onClick={() => setIndex(index - 1)}
+                    >
+                        <RightArrow className='w-2/4 h-2/4 transform -rotate-180' />
+                    </div>
                 </div>
             }
             {
@@ -85,7 +93,12 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
                 <div 
                     className={`absolute right-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index >= childrenBlocks.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
-                    <div className='rounded-full w-12 h-12 bg-purple-300' onClick={() => setIndex(index + 1)} />
+                    <div 
+                        className='rounded-full w-12 h-12 bg-gray-200 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
+                        onClick={() => setIndex(index + 1)}
+                    >
+                        <RightArrow className='w-2/4 h-2/4' />
+                    </div>
                 </div>
             }
 		</div>
