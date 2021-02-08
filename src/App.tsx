@@ -11,6 +11,7 @@ import Contact from './pages/contact/contact';
 import './App.css';
 
 function App() {
+  
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col bg-coolGray-50">
       <Header />
@@ -18,9 +19,9 @@ function App() {
         <ErrorBoundary>
           <Suspense fallback={<span>loading</span>}>
             <Switch>
-              <Route exact path='/' component={Home} />
-              <Route path='/gallery/:gallery' component={Gallery} />
+              {/* <Route path='/gallery/:gallery' component={Gallery} /> */}
               <Route exact path='/contact' component={Contact} />
+              <Route path='/:gallery?' component={Home} />
               <Redirect to='/' />
             </Switch>
           </Suspense>
