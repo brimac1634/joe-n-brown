@@ -65,10 +65,11 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
 	         >
 	            {
                     !!childrenBlocks && !!rect &&
-                    childrenBlocks?.map(block => (
+                    childrenBlocks?.map((block, i) => (
                         <div 
                             className='flex justify-center flex-shrink-0'
                             style={{width: rect.width }}
+                            key={i}
                         >
                             {block}
                         </div>
@@ -81,7 +82,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
                     className={`absolute left-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index <= 0 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
                     <div 
-                        className='rounded-full w-12 h-12 bg-gray-200 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
+                        className='rounded-full w-12 h-12 bg-gray-100 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
                         onClick={() => setIndex(index - 1)}
                     >
                         <RightArrow className='w-2/4 h-2/4 transform -rotate-180' />
@@ -94,7 +95,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
                     className={`absolute right-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index >= childrenBlocks.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
                     <div 
-                        className='rounded-full w-12 h-12 bg-gray-200 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
+                        className='rounded-full w-12 h-12 bg-gray-100 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
                         onClick={() => setIndex(index + 1)}
                     >
                         <RightArrow className='w-2/4 h-2/4' />

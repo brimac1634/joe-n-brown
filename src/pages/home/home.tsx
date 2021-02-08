@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-
 import Carousel from '../../components/carousel/carousel';
+
+import './home.scss';
 
 type TParams = { gallery: string };
 
@@ -27,7 +28,7 @@ const Home = ({ match, history }: RouteComponentProps<TParams>) => {
 
 
     useEffect(() => {
-        if (loadingMenuIsComplete && !!gallery) {
+        if (loadingMenuIsComplete) {
             let selectedGallery: Gallery | null = null;
             switch(gallery) {
                 case Gallery.illustrations:
@@ -41,7 +42,7 @@ const Home = ({ match, history }: RouteComponentProps<TParams>) => {
                     break;
                 
             }
-            console.log({selectedGallery});
+
             if (!!selectedGallery) {
                 setCurrentGallery(selectedGallery);
             }
@@ -51,23 +52,47 @@ const Home = ({ match, history }: RouteComponentProps<TParams>) => {
     return ( 
         <div className='w-screen h-full flex flex-col'>
             <div className='flex-grow p-4 md:px-8 lg:px-12'>
-                <div className='w-full grid grid-cols-3 gap-4 lg:gap-12 h-full'>
-                    <Link to='/illustrations' className="flex flex-col">
-                        <span className='text-lg lg:text-xl font-semibold'>Illustrations</span>
+                <div className='w-full grid grid-cols-3 h-full'>
+                    <Link 
+                        to='/illustrations' 
+                        className={`
+                            flex flex-col px-2 lg:px-6 transition-opacity duration-300 
+                            ${!currentGallery && 'opacity-1'}
+                            ${!!currentGallery && currentGallery !== Gallery.illustrations && 'opacity-0'}
+                            ${!!currentGallery && currentGallery === Gallery.illustrations && 'slide-right opacity-1'}
+                        `}
+                    >
+                        <span className='text-center text-lg lg:text-xl font-semibold'>Illustrations</span>
                         <div className='flex-grow w-full h-full bg-illustrations bg-cover'></div>
                     </Link>
-                    <Link to='/concepts' className="flex flex-col">
-                        <span className='text-lg lg:text-xl font-semibold'>Concepts</span>
+                    <Link 
+                        to='/concepts' 
+                        className={`
+                            flex flex-col px-2 lg:px-6 transition-opacity duration-300 
+                            ${!currentGallery && 'opacity-1'}
+                            ${!!currentGallery && currentGallery !== Gallery.concepts && 'opacity-0'}
+                            ${!!currentGallery && currentGallery === Gallery.concepts && 'opacity-1'}
+                        `}
+                    >
+                        <span className='text-center text-lg lg:text-xl font-semibold'>Concepts</span>
                         <div className='flex-grow w-full h-full bg-illustrations bg-cover'></div>
                     </Link>
-                    <Link to='/sketches' className="flex flex-col">
-                        <span className='text-lg lg:text-xl font-semibold'>Sketches</span>
+                    <Link 
+                        to='/sketches' 
+                        className={`
+                            flex flex-col px-2 lg:px-6 transition-opacity duration-300 
+                            ${!currentGallery && 'opacity-1'}
+                            ${!!currentGallery && currentGallery !== Gallery.sketches && 'opacity-0'}
+                            ${!!currentGallery && currentGallery === Gallery.sketches && 'slide-left opacity-1'}
+                        `}
+                    >
+                        <span className='text-center text-lg lg:text-xl font-semibold'>Sketches</span>
                         <div className='flex-grow w-full h-full bg-illustrations bg-cover'></div>
                     </Link>
                 </div>
             </div>
             <div className='w-full'>
-                <div className='w-8/12 h-28 bg-red-500 mx-auto'>
+                <div className='w-8/12 h-28 mx-auto'>
                     <Carousel>
                         <div className='p-2 w-28 h-28 flex-shrink-0'>
                             <div 
