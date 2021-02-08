@@ -7,6 +7,7 @@ export interface CarouselProps {
 }
  
 const Carousel: React.FC<CarouselProps> = ({ children }) => {
+    const [index, setIndex] = useState<number>(0);
 	const [translation, setTranslation] = useState(0);
     const [rect, setRect] = useState<DOMRect | null>(null);
     const galleryWrapper = useRef<HTMLDivElement>(null);
@@ -19,21 +20,11 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
         }
     }, [galleryWrapper, screenSize])
 
-	const nextImage = useCallback(() => {
-	    if (!!rect) {
-            setTranslation(translation - rect?.width);
+    useEffect(() => {
+        if (!!rect) {
+            setTranslation(-index * rect.width);
         }
-    }, [translation, rect])
-    
-	const previousImage = useCallback(() => {
-	    if (!!rect) {
-            setTranslation(translation + rect?.width);
-        }
-    }, [translation, rect])
-    
-    if (!!rect) {
-        console.log();
-    }
+    }, [index, rect]);
 
     const childrenBlocks: Array<Array<React.ReactChild>> | undefined = useMemo(() => {
         if (!!rect && children.length > 1) {
@@ -58,35 +49,45 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
 
             return blockArray;
         }
-    }, [rect, children])
-
-    console.log(childrenBlocks);
+    }, [rect, children]);
     
     return ( 
         <div className='w-full h-full relative overflow-hidden' ref={galleryWrapper}> 
 			<div 
-				className='h-full w-full transition duration-700 ease-in-out flex overflow-x-hidden'
+				className='h-full w-full transition duration-700 ease-in-out flex'
 	          	style={{
 					transform: `translate(${translation}px, 0)`,
 					WebkitTransform: `translate(${translation}px, 0)`
 	            }}
 	         >
 	            {
-                    children
+                    !!childrenBlocks && !!rect &&
+                    childrenBlocks?.map(block => (
+                        <div 
+                            className='flex justify-center flex-shrink-0'
+                            style={{width: rect.width }}
+                        >
+                            {block}
+                        </div>
+                    ))
                 }
 	        </div>
-            <div 
-                className='absolute left-0 top-0 bottom-0 px-2 flex items-center'
-                
-            >
-                <div className='rounded-full w-12 h-12 bg-purple-300' onClick={previousImage} />
-            </div>
-            <div 
-                className='absolute right-0 top-0 bottom-0 px-2 flex items-center'
-                
-            >
-                <div className='rounded-full w-12 h-12 bg-purple-300' onClick={nextImage} />
-            </div>
+            {
+                childrenBlocks &&
+                <div 
+                    className={`absolute left-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index <= 0 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
+                >
+                    <div className='rounded-full w-12 h-12 bg-purple-300' onClick={() => setIndex(index - 1)} />
+                </div>
+            }
+            {
+                childrenBlocks &&
+                <div 
+                    className={`absolute right-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index >= childrenBlocks.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
+                >
+                    <div className='rounded-full w-12 h-12 bg-purple-300' onClick={() => setIndex(index + 1)} />
+                </div>
+            }
 		</div>
      );
 }
