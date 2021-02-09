@@ -12,7 +12,7 @@ const config = {
     measurementId: "G-JK9315TTDP"
 };
 
-interface GalleryItem {
+export interface GalleryItem {
     imagePath: string;
     imageUrl?: string;
     description: string;
@@ -34,7 +34,7 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
     try {
         const galleryRef = await firestore.collection('gallery');
         const snapshot = await galleryRef.orderBy('date', 'desc').get();
-        snapshot.docs.forEach(async doc => {
+        const promises = snapshot.docs.map(async (doc): Promise<void> => {
             const item = doc.data() as GalleryItem;
             item.imageUrl = await storageRef.child(item.imagePath).getDownloadURL();
             
@@ -46,11 +46,15 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
             } else {
                 galleryMap[item.gallery].items.push(item);
             }
+            return;
         })
+        await Promise.all(promises);
+        
+        return galleryMap;
     } catch(err) {
         throw err;
     }
-    return galleryMap;
+    
 }
 
 firebase.initializeApp(config);
