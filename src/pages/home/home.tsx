@@ -3,6 +3,8 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 
 import Carousel from '../../components/carousel/carousel';
 
+import { getGalleries, GalleryGroup } from '../../firebase.utils';
+
 import './home.scss';
 
 type TParams = { gallery: string };
@@ -13,64 +15,75 @@ enum Gallery {
     sketches = 'sketches'
 }
 
-const galleryImages: {[key: string]: string[]} = {
-    illustrations: ['https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1572254318257-BX3ERAV4MOOSTGG2W5IX/ke17ZwdGBToddI8pDm48kNiEM88mrzHRsd1mQ3bxVct7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0topjEaZcWjtmMYdCWL4dkGbxs35J-ZjFa9s1e3LsxrX8g4qcOj2k2AL08mW_Htcgg/Druid+-+FINAL+-+HQ.png?format=1500w'],
-    concepts: ['https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1607423533474-X8LMKR3HPNA1G4YRWAC3/ke17ZwdGBToddI8pDm48kLPswmMOqQZ9-Q6KHLjvbpZ7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1UTcpTqfU-ZEsztPyQLxhSSK-PhJjRDDFQG0l3_ZnmWi1QjT9byXZM3ISxo3y1NRptg/hiding+halflings+2.jpg?format=1500w'],
-    sketches: ['https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w']
-}
-
 export interface HomeProps {
     
 }
  
 const Home = ({ match }: RouteComponentProps<TParams>) => {
-    const [isLoadingMenu, setIsLoadingMenu] = useState<boolean>(false);
+    const [galleryGroup, setGalleryGroup] = useState<GalleryGroup | null>(null);
+    const [isLoadingGallery, setIsLoadingGallery] = useState<boolean>(false);
     const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<Gallery>>(new Set());
     const [selectedImageIsLoaded, setSelectedImageIsLoaded] = useState<boolean>(false);
     const [showSelectedImage, setShowSelectedImage] = useState<boolean>(false);
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
-    const [selectedImage, setSelectedImage] = useState<string | null>('https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w');
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const gallery = match.params.gallery;
 
+    async function fetchGalleries(): Promise<void> {
+        setIsLoadingGallery(true);
+        try {
+            const galleryGroup = await getGalleries();
+            setGalleryGroup(galleryGroup);
+        } catch(err) {
+            console.log(err);
+            // show error if nothing loads
+        } finally {
+            setIsLoadingGallery(false);
+        }
+    }
 
     useEffect(() => {
-        if (galleryImagesLoaded.size === 3) {
-            let selectedGallery: Gallery | null = null;
-            switch(gallery) {
-                case Gallery.illustrations:
-                    selectedGallery = Gallery.illustrations;
-                    break;
-                case Gallery.concepts:
-                    selectedGallery = Gallery.concepts;
-                    break;
-                case Gallery.sketches:
-                    selectedGallery = Gallery.sketches;
-                    break;
+        fetchGalleries();
+    }, [])
+
+    // useEffect(() => {
+    //     if (galleryImagesLoaded.size === 3) {
+    //         let selectedGallery: Gallery | null = null;
+    //         switch(gallery) {
+    //             case Gallery.illustrations:
+    //                 selectedGallery = Gallery.illustrations;
+    //                 break;
+    //             case Gallery.concepts:
+    //                 selectedGallery = Gallery.concepts;
+    //                 break;
+    //             case Gallery.sketches:
+    //                 selectedGallery = Gallery.sketches;
+    //                 break;
                 
-            }
+    //         }
 
-            setCurrentGallery(selectedGallery);
-            setSelectedImageIsLoaded(false);
+    //         setCurrentGallery(selectedGallery);
+    //         setSelectedImageIsLoaded(false);
 
-            if(!!!selectedGallery) {
-                setSelectedImage(null);
-            } else {
-                setSelectedImage(galleryImages[selectedGallery][0]);
+    //         if(!!!selectedGallery) {
+    //             setSelectedImage(null);
+    //         } else {
+    //             setSelectedImage(galleryImages[selectedGallery][0]);
 
-                if (selectedGallery === Gallery.illustrations || selectedGallery === Gallery.sketches) {
-                    setTimeout(() => {
-                        setShowSelectedImage(true);
-                    }, 1100);
-                } else {
-                    setShowSelectedImage(true);
-                }
-            }
+    //             if (selectedGallery === Gallery.illustrations || selectedGallery === Gallery.sketches) {
+    //                 setTimeout(() => {
+    //                     setShowSelectedImage(true);
+    //                 }, 1100);
+    //             } else {
+    //                 setShowSelectedImage(true);
+    //             }
+    //         }
             
             
-        }
-    }, [galleryImagesLoaded, gallery]);
+    //     }
+    // }, [galleryImagesLoaded, gallery]);
 
     function updateGalleryImagesLoaded(image: Gallery) {
         const gallery = new Set(galleryImagesLoaded).add(image);
@@ -87,14 +100,15 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                         onLoad={() => setSelectedImageIsLoaded(true)}
                         alt='something'
                         className={`
-                            pt-7 min-h-full max-h-full max-w-full object-contain transform transition duration-400 
+                            pt-7 min-h-full max-h-full max-w-full object-contain transform transition duration-500 
                             ${(!!selectedImage && selectedImageIsLoaded && showSelectedImage) ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}
                         `}
                     />
                 </div>
                 <div className='w-full grid grid-cols-3 h-full z-1'>
                     {
-                        Object.keys(galleryImages).map((gallery, i) => (
+                        !!galleryGroup &&
+                        Object.keys(galleryGroup).map((gallery, i) => (
                             <Link 
                                 key={gallery}
                                 to={`/${gallery}`}
@@ -103,15 +117,16 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                                 <span className={`text-center text-lg lg:text-xl font-semibold capitalize ${currentGallery === gallery ? 'opacity-100' : 'opacity-30'}`}>{gallery}</span>
                                 <div 
                                     className={`
-                                        px-2 lg:px-6 flex-grow w-full h-full flex justify-center items-center overflow-hidden
+                                        px-2 lg:px-6 flex-grow w-full h-full flex justify-center items-center overflow-hidden transition-opacity duration-600
                                         ${!currentGallery && galleryImagesLoaded.size === 3 && 'opacity-100'}
                                         ${((!!currentGallery && currentGallery !== gallery) || galleryImagesLoaded.size !== 3) && 'opacity-0'}
-                                        ${!!currentGallery && currentGallery === gallery && i === 0 && 'slide-right opacity-100'}
-                                        ${!!currentGallery && currentGallery === gallery && i === 2 && 'slide-left opacity-100'}
+                                        ${currentGallery === gallery && i === 0 && 'slide-right opacity-100'}
+                                        ${currentGallery === gallery && i === 2 && 'slide-left opacity-100'}
                                     `}
                                 >
+                                    {console.log(galleryGroup[gallery].items[0].imageUrl)}
                                     <img 
-                                        src={galleryImages[gallery][0]}
+                                        src={galleryGroup[gallery].items[0].imageUrl}
                                         alt={gallery}
                                         onLoad={()=>updateGalleryImagesLoaded(gallery as Gallery)}
                                         className='object-cover min-w-full min-h-full h-full'
