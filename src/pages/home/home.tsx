@@ -2,10 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
 import Carousel from '../../components/carousel/carousel';
+import CustomImage from '../../components/custom-image/custom-image';
 
 import { getGalleries, GalleryGroup, GalleryItem } from '../../firebase.utils';
-
-import './home.scss';
 
 type TParams = { gallery: string };
 
@@ -25,7 +24,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<Gallery>>(new Set());
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
-    const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
+    const [selectedImage, setSelectedImage] = useState<GalleryItem | undefined>(undefined);
 
     const gallery = match.params.gallery;
 
@@ -33,7 +32,6 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         setIsLoadingGallery(true);
         try {
             const galleryGroup = await getGalleries();
-            console.log(galleryGroup);
             setGalleryGroup(galleryGroup);
         } catch(err) {
             console.log(err);
@@ -66,12 +64,10 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
             setCurrentGallery(selectedGallery);
 
             if(!!!selectedGallery) {
-                setSelectedImage(null);
+                setSelectedImage(undefined);
             } else if (!!galleryGroup) {
                 setSelectedImage(galleryGroup[selectedGallery].items[0]);
             }
-            
-            
         }
     }, [galleryImagesLoaded, gallery, galleryGroup]);
 
@@ -89,9 +85,9 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     to={`/${item}`}
                     className={`flex flex-col`}
                 >
-                    <div className='flex justify-center'>
+                    <div className='flex justify-center mb-3'>
                         <span className={`
-                            text-center text-lg lg:text-xl font-semibold px-2 py-1 capitalize border-2 border-black transition duration-500 
+                            text-center text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
                             ${currentGallery === item ? 'border-opacity-100' : 'border-opacity-0'}
                             ${(!currentGallery || currentGallery === item) ? 'text-opacity-100' : 'text-opacity-30'}
                         `}>
@@ -104,8 +100,6 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                             ${!currentGallery && galleryImagesLoaded.size === 3 ? 'opacity-100' : 'opacity-0'}
                         `}
                     >
-                        {/* {   !!galleryGroup &&
-                            console.log(galleryGroup)} */}
                         {
                             !!galleryGroup &&
                             <img 
@@ -122,25 +116,19 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         return items;
     }, [galleryGroup, Gallery, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
 
-    // console.log(menuItems);
     
     return ( 
         <div className='w-screen h-full flex flex-col'>
-            <div className='flex-grow p-2 md:px-8 lg:px-12 relative'>
+            <div className='flex-grow p-1 md:px-8 lg:px-12 relative'>
                 <div className='w-full grid grid-cols-3 h-full z-1 gap-2 md:gap-3 lg:gap-4'>
                     {menuItems}
                 </div>
-                {/* <div className='w-full h-full absolute top-0 left-0 flex justify-center p-2 md:px-8 lg:px-12 -z-1'>
-                    <img 
-                        src={selectedImage || ''}
-                        onLoad={() => setSelectedImageIsLoaded(true)}
-                        alt='something'
-                        className={`
-                            pt-7 min-h-full max-h-full max-w-full object-contain transform transition duration-500 
-                            ${(!!selectedImage && selectedImageIsLoaded && showSelectedImage) ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}
-                        `}
+                <div className='w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 -z-1 border-2 border-transparent'>
+                    <CustomImage 
+                        src={selectedImage?.imageUrl}
+                        alt={selectedImage?.description || 'main photo'}
                     />
-                </div> */}
+                </div>
             </div>
             <div className='w-full'>
                 <div className={`
