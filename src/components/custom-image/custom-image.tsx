@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
     src: string | undefined;
@@ -7,7 +7,11 @@ export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageEleme
  
 const CustomImage: React.FC<CustomImageProps> = ({ src, alt, ...props }) => {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
-    if (!src) return <div className='h-full max-w-full'/>
+    // if (!src) return <div className='h-full max-w-full'/>
+    useEffect(() => {
+        setImageLoaded(false);
+    }, [src])
+
     return ( 
         <img 
             src={src}

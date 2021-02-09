@@ -116,7 +116,6 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         return items;
     }, [galleryGroup, Gallery, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
 
-    
     return ( 
         <div className='w-screen h-full flex flex-col'>
             <div className='flex-grow p-1 md:px-8 lg:px-12 relative'>
