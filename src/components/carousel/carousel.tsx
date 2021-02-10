@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef, useMemo} from 'react';
 
-import { ReactComponent as LeftArrow } from '../../assets/icons/left-arrow.svg';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 
 import { useWindowSize } from '../../utils';
 
-export interface CarouselProps {
-    children: React.ReactChild[]
+export interface CarouselProps extends React.HTMLAttributes<HTMLDivElement> {
+    children: React.ReactChild[];
+    gallery: string | undefined;
 }
  
-const Carousel: React.FC<CarouselProps> = ({ children }) => {
+const Carousel: React.FC<CarouselProps> = ({ children, gallery }) => {
     const [index, setIndex] = useState<number>(0);
 	const [translation, setTranslation] = useState(0);
     const [rect, setRect] = useState<DOMRect | null>(null);
@@ -17,7 +17,11 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     const screenSize = useWindowSize();
     
     useEffect(() => {
-        if (!!galleryWrapper && !!galleryWrapper.current && !rect) {
+        setIndex(0);
+    }, [gallery])
+    
+    useEffect(() => {
+        if (!!galleryWrapper && !!galleryWrapper.current) {
             const rect = galleryWrapper.current.getBoundingClientRect();
             setRect(rect);
         }
@@ -67,7 +71,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
                     !!childrenBlocks && !!rect &&
                     childrenBlocks?.map((block, i) => (
                         <div 
-                            className='flex justify-center flex-shrink-0'
+                            className='flex justify-center flex-shrink-0 w-full'
                             style={{width: rect.width }}
                             key={i}
                         >

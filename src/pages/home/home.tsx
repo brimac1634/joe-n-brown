@@ -85,7 +85,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     className='flex justify-center mb-3'
                 >
                     <span className={`
-                        text-center text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
+                        text-center text-sm md:text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
                         ${currentGallery?.name === item ? 'border-opacity-100' : 'border-opacity-0'}
                         ${(!currentGallery || currentGallery.name === item) ? 'text-opacity-100' : 'text-opacity-30'}
                     `}>
@@ -165,11 +165,11 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
 
     return ( 
         <div className='w-screen h-full flex flex-col'>
-            <div className='flex-grow p-1 md:px-8 lg:px-12 relative'>
+            <div className='flex-grow py-1 px-3 md:px-8 lg:px-12 relative'>
                 <div className='w-full grid grid-cols-3 gap-2 md:gap-3 lg:gap-4'>
                     {menuButtons}
                 </div>
-                <div className='w-full grid grid-cols-3 h-full z-1 gap-2 md:gap-3 lg:gap-4'>
+                <div className='w-full grid grid-cols-3 h-full z-1 gap-3 md:gap-3 lg:gap-4'>
                     {menuItems}
                 </div>
                 <div className={`
@@ -184,10 +184,10 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
             </div>
             <div className='w-full'>
                 <div className={`
-                    w-full md:w-8/12 h-24 mx-auto transition-opacity duration-500
+                    px-2 w-full max-w-xl h-24 mx-auto transition-opacity duration-500
                     ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
                 `}>
-                    <Carousel>
+                    <Carousel gallery={currentGallery?.name}>
                         {carouselItems}
                     </Carousel>
                 </div>
