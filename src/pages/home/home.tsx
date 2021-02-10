@@ -4,11 +4,11 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import Carousel from '../../components/carousel/carousel';
 import CustomImage from '../../components/custom-image/custom-image';
 
-import { getGalleries, GalleryGroup, GalleryItem } from '../../firebase.utils';
+import { getGalleries, GalleryGroup, GalleryItem, Gallery } from '../../firebase.utils';
 
 type TParams = { gallery: string };
 
-enum Gallery {
+enum GalleryEnum {
     illustrations = 'illustrations',
     concepts = 'concepts',
     sketches = 'sketches'
@@ -21,7 +21,7 @@ export interface HomeProps {
 const Home = ({ match }: RouteComponentProps<TParams>) => {
     const [galleryGroup, setGalleryGroup] = useState<GalleryGroup | null>(null);
     const [isLoadingGallery, setIsLoadingGallery] = useState<boolean>(false);
-    const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<Gallery>>(new Set());
+    const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<GalleryEnum>>(new Set());
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
     const [selectedImage, setSelectedImage] = useState<GalleryItem | undefined>(undefined);
@@ -47,82 +47,135 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
 
     useEffect(() => {
         if (galleryImagesLoaded.size === 3) {
-            let selectedGallery: Gallery | null = null;
+            let selectedGallery: GalleryEnum | null = null;
             switch(gallery) {
-                case Gallery.illustrations:
-                    selectedGallery = Gallery.illustrations;
+                case GalleryEnum.illustrations:
+                    selectedGallery = GalleryEnum.illustrations;
                     break;
-                case Gallery.concepts:
-                    selectedGallery = Gallery.concepts;
+                case GalleryEnum.concepts:
+                    selectedGallery = GalleryEnum.concepts;
                     break;
-                case Gallery.sketches:
-                    selectedGallery = Gallery.sketches;
+                case GalleryEnum.sketches:
+                    selectedGallery = GalleryEnum.sketches;
                     break;
-                
             }
 
-            setCurrentGallery(selectedGallery);
-
             if(!!!selectedGallery) {
+                setCurrentGallery(null);
                 setSelectedImage(undefined);
             } else if (!!galleryGroup) {
+                setCurrentGallery(galleryGroup[selectedGallery]);
                 setSelectedImage(galleryGroup[selectedGallery].items[0]);
             }
         }
     }, [galleryImagesLoaded, gallery, galleryGroup]);
 
-    function updateGalleryImagesLoaded(image: Gallery) {
+    function updateGalleryImagesLoaded(image: GalleryEnum) {
         const gallery = new Set(galleryImagesLoaded).add(image);
         setGalleryImagesLoaded(gallery);
     }
 
+    const menuButtons: React.ReactElement[] = useMemo(() => {
+        const items: React.ReactElement[] = [];
+        for (let item in GalleryEnum) {
+            items.push(
+                <Link 
+                    key={item}
+                    to={`/${item}`} 
+                    className='flex justify-center mb-3'
+                >
+                    <span className={`
+                        text-center text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
+                        ${currentGallery?.name === item ? 'border-opacity-100' : 'border-opacity-0'}
+                        ${(!currentGallery || currentGallery.name === item) ? 'text-opacity-100' : 'text-opacity-30'}
+                    `}>
+                        {item}
+                    </span>
+                </Link>
+            );
+        }
+        return items;
+    }, [GalleryEnum, currentGallery]);
+
     const menuItems: React.ReactElement[] = useMemo(() => {
         const items: React.ReactElement[] = [];
-        for (let item in Gallery) {
+        for (let item in GalleryEnum) {
             items.push(
                 <Link 
                     key={item}
                     to={`/${item}`}
-                    className={`flex flex-col`}
+                    className={currentGallery ? 'pointer-events-none' : ''}
                 >
-                    <div className='flex justify-center mb-3'>
-                        <span className={`
-                            text-center text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
-                            ${currentGallery === item ? 'border-opacity-100' : 'border-opacity-0'}
-                            ${(!currentGallery || currentGallery === item) ? 'text-opacity-100' : 'text-opacity-30'}
-                        `}>
-                            {item}
-                        </span>
-                    </div>
                     <div 
                         className={`
                             border-2 border-black flex-grow w-full h-full flex justify-center items-center overflow-hidden transition-opacity duration-500
-                            ${!currentGallery && galleryImagesLoaded.size === 3 ? 'opacity-100' : 'opacity-0'}
+                            ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
+                            ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-200 animate-pulse'}
                         `}
                     >
-                        {
-                            !!galleryGroup &&
-                            <img 
-                                src={galleryGroup[item]?.items[0]?.imageUrl || ''}
-                                alt={item}
-                                onLoad={()=>updateGalleryImagesLoaded(item as Gallery)}
-                                className='object-cover min-w-full min-h-full h-full'
-                            />
-                        }
+                        <div 
+                            className={`w-full h-full transition-opacity duration-500
+                            ${galleryImagesLoaded.size === 3 ? 'opacity-100' : 'opacity-0'}
+                        `}>
+                            {
+                                !!galleryGroup &&
+                                <CustomImage 
+                                    src={galleryGroup[item]?.items[0]?.imageUrl || ''}
+                                    alt={item}
+                                    onLoad={()=>updateGalleryImagesLoaded(item as GalleryEnum)}
+                                    objectFit='object-cover'
+                                />
+                            }
+                        </div>
                     </div>
                 </Link>
             );
         }
         return items;
-    }, [galleryGroup, Gallery, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
+    }, [galleryGroup, GalleryEnum, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
+    
+    const carouselItems: React.ReactElement[] = useMemo(() => {
+        if (!currentGallery) return [];
+
+        const items: React.ReactElement[] = currentGallery.items.map((item, i) => (
+            <div 
+                className={`
+                    p-2 w-24 h-24 flex-shrink-0 
+                `} 
+                key={i}
+            >
+                <div 
+                    className={`
+                        w-full h-full border-2 border-black transition duration-500 overflow-hidden cursor-pointer
+                        ${selectedImage?.id === item.id ? 'border-opacity-100' : 'border-opacity-0'}
+                    `}
+                    onClick={()=>setSelectedImage(item)}
+                >
+                    <CustomImage 
+                        src={item.imageUrl} 
+                        alt={item.description}
+                        objectFit='object-cover'
+                    />
+                </div>
+            </div>
+        ))
+        
+        return items;
+    }, [currentGallery, selectedImage]);
 
     return ( 
         <div className='w-screen h-full flex flex-col'>
             <div className='flex-grow p-1 md:px-8 lg:px-12 relative'>
+                <div className='w-full grid grid-cols-3 gap-2 md:gap-3 lg:gap-4'>
+                    {menuButtons}
+                </div>
                 <div className='w-full grid grid-cols-3 h-full z-1 gap-2 md:gap-3 lg:gap-4'>
                     {menuItems}
                 </div>
-                <div className='w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 -z-1 border-2 border-transparent'>
+                <div className={`
+                    w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 border-2 border-transparent
+                    pointer-events-none
+                `}>
                     <CustomImage 
                         src={selectedImage?.imageUrl}
                         alt={selectedImage?.description || 'main photo'}
@@ -135,72 +188,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
                 `}>
                     <Carousel>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
-                        <div className='p-2 w-24 h-24 flex-shrink-0'>
-                            <div 
-                                className='h-full w-full bg-no-repeat bg-center bg-cover bg-blue-200' 
-                                // style={{backgroundImage: 'url(https://images.squarespace-cdn.com/content/v1/584598e2893fc0759872af85/1583919855360-YFVKQRZREHYC0ETO16CI/ke17ZwdGBToddI8pDm48kHEIaJSpY6T3rNsVDHK0CJB7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z5QPOohDIaIeljMHgDF5CVlOqpeNLcJ80NK65_fV7S1Ue1CgAhz9dz8zTQADr5cXrA6PZchenow9CxqkbDzVSfBm7cT0R_dexc_UL_zbpz6JQ/image-asset.png?format=500w)'}}
-                            /> 
-                        </div>
+                        {carouselItems}
                     </Carousel>
                 </div>
             </div>

@@ -13,6 +13,7 @@ const config = {
 };
 
 export interface GalleryItem {
+    id?: string;
     imagePath: string;
     imageUrl?: string;
     description: string;
@@ -20,7 +21,7 @@ export interface GalleryItem {
     date: Date;
 }
 
-interface Gallery {
+export interface Gallery {
     name: string;
     items: GalleryItem[];
 }
@@ -34,10 +35,16 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
     try {
         const galleryRef = await firestore.collection('gallery');
         const snapshot = await galleryRef.orderBy('date', 'desc').get();
-        const promises = snapshot.docs.map(async (doc): Promise<void> => {
+        const promises = snapshot.docs.map(async (doc): Promise<GalleryItem> => {
             const item = doc.data() as GalleryItem;
+            item.id = doc.id;
             item.imageUrl = await storageRef.child(item.imagePath).getDownloadURL();
             
+            return item;
+        })
+        const galleryItems = await Promise.all(promises);
+
+        galleryItems.forEach(item => {
             if (!galleryMap[item.gallery]) {
                 galleryMap[item.gallery] = {
                     name: item.gallery,
@@ -46,9 +53,7 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
             } else {
                 galleryMap[item.gallery].items.push(item);
             }
-            return;
         })
-        await Promise.all(promises);
         
         return galleryMap;
     } catch(err) {

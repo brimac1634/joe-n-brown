@@ -30,7 +30,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
     }, [index, rect]);
 
     const childrenBlocks: Array<Array<React.ReactChild>> | undefined = useMemo(() => {
-        if (!!rect && children.length > 1) {
+        if (!!rect && children.length >= 1) {
             const childrenPerBlock = Math.floor((rect.width - 128) / rect.height);
             const blockArray: Array<Array<React.ReactChild>> = [];
 
