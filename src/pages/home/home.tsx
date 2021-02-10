@@ -111,7 +111,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                             border-2 border-black w-full h-full 
                             overflow-hidden transition-opacity duration-500
                             ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
-                            ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-200 animate-pulse'}
+                            ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-300 animate-pulse'}
                         `}
                     >
                         <div 
@@ -166,7 +166,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     }, [currentGallery, selectedImage]);
 
     return ( 
-        <div className='w-screen h-full flex flex-col'>
+        <div className='w-full max-w-6xl h-full flex flex-col mx-auto'>
             <div className='flex-grow flex flex-col items-stretch py-1 px-3 md:px-8 lg:px-12 relative'>
                 <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
                     {menuButtons}

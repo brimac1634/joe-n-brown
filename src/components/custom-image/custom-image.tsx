@@ -25,7 +25,6 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, objectFit = 'object
             src={src}
             alt={alt}
             onLoad={() => {
-                console.log('loaded')
                 setImageLoaded(true);
                 if (!!onLoad) {
                     onLoad();
