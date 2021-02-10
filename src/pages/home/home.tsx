@@ -108,7 +108,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 >
                     <div 
                         className={`
-                            border-2 border-black flex-grow w-full h-full flex justify-center items-center 
+                            border-2 border-black w-full h-full 
                             overflow-hidden transition-opacity duration-500
                             ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
                             ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-200 animate-pulse'}
@@ -116,7 +116,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     >
                         <div 
                             className={`w-full h-full transition-opacity duration-500 hover:scale-110 
-                            transform transition-transform duration-1000 origin-center
+                            transform transition-transform duration-1000 origin-center overflow-hidden
                             ${galleryImagesLoaded.size === 3 ? 'opacity-100' : 'opacity-0'}
                         `}>
                             {
@@ -168,10 +168,10 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     return ( 
         <div className='w-screen h-full flex flex-col'>
             <div className='flex-grow flex flex-col items-stretch py-1 px-3 md:px-8 lg:px-12 relative'>
-                <div className='w-full grid grid-cols-3 gap-3 lg:gap-4'>
+                <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
                     {menuButtons}
                 </div>
-                <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 lg:gap-4'>
+                <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 md:gap-8 lg:gap-12'>
                     {menuItems}
                 </div>
                 <div className={`
