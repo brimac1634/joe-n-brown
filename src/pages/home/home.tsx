@@ -104,17 +104,19 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 <Link 
                     key={item}
                     to={`/${item}`}
-                    className={currentGallery ? 'pointer-events-none' : ''}
+                    className={`${currentGallery ? 'pointer-events-none' : ''}`}
                 >
                     <div 
                         className={`
-                            border-2 border-black flex-grow w-full h-full flex justify-center items-center overflow-hidden transition-opacity duration-500
+                            border-2 border-black flex-grow w-full h-full flex justify-center items-center 
+                            overflow-hidden transition-opacity duration-500
                             ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
                             ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-200 animate-pulse'}
                         `}
                     >
                         <div 
-                            className={`w-full h-full transition-opacity duration-500
+                            className={`w-full h-full transition-opacity duration-500 hover:scale-110 
+                            transform transition-transform duration-1000 origin-center
                             ${galleryImagesLoaded.size === 3 ? 'opacity-100' : 'opacity-0'}
                         `}>
                             {
@@ -165,16 +167,17 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
 
     return ( 
         <div className='w-screen h-full flex flex-col'>
-            <div className='flex-grow py-1 px-3 md:px-8 lg:px-12 relative'>
-                <div className='w-full grid grid-cols-3 gap-2 md:gap-3 lg:gap-4'>
+            <div className='flex-grow flex flex-col items-stretch py-1 px-3 md:px-8 lg:px-12 relative'>
+                <div className='w-full grid grid-cols-3 gap-3 lg:gap-4'>
                     {menuButtons}
                 </div>
-                <div className='w-full grid grid-cols-3 h-full z-1 gap-3 md:gap-3 lg:gap-4'>
+                <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 lg:gap-4'>
                     {menuItems}
                 </div>
                 <div className={`
                     w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 border-2 border-transparent
-                    pointer-events-none
+                    pointer-events-none transition-opacity duration-500
+                    ${currentGallery ? 'opacity-100' : 'opacity-0'}
                 `}>
                     <CustomImage 
                         src={selectedImage?.imageUrl}
