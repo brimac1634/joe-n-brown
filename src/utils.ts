@@ -1,10 +1,20 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 
-export const useWindowSize = () => {
-  const [size, setSize] = useState<number[]>([0, 0]);
+interface Screen {
+  width: number,
+  height: number
+}
+
+export const useWindowSize = (): Screen => {
+  /**
+   * Custom hook to return the change in viewport size
+   * returns array of numbers
+   * [screen width, screen height]
+   */
+  const [size, setSize] = useState<Screen>({ width: 0, height: 0});
   useLayoutEffect(() => {
     function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
+      setSize({width: window.innerWidth, height: window.innerHeight});
     }
     window.addEventListener('resize', updateSize);
     updateSize();

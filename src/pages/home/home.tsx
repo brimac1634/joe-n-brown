@@ -104,11 +104,11 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 <Link 
                     key={item}
                     to={`/${item}`}
-                    className={`${currentGallery ? 'pointer-events-none' : ''}`}
+                    className={`flex ${currentGallery ? 'pointer-events-none' : ''}`}
                 >
                     <div 
                         className={`
-                            border-2 border-black w-full h-full 
+                            border-2 border-black w-full 
                             overflow-hidden transition-opacity duration-500
                             ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
                             ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-300 animate-pulse'}
@@ -166,33 +166,35 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     }, [currentGallery, selectedImage]);
 
     return ( 
-        <div className='w-full max-w-6xl h-full flex flex-col mx-auto'>
-            <div className='flex-grow flex flex-col items-stretch py-1 px-3 md:px-8 lg:px-12 relative'>
-                <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
-                    {menuButtons}
+        <div className='w-full flex'>
+            <div className='w-full max-w-6xl flex flex-col mx-auto'>
+                <div className='h-full flex flex-col py-1 px-3 md:px-8 lg:px-12 relative'>
+                    <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
+                        {menuButtons}
+                    </div>
+                    <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 md:gap-8 lg:gap-12'>
+                        {menuItems}
+                    </div>
+                    <div className={`
+                        w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 border-2 border-transparent
+                        pointer-events-none transition-opacity duration-500
+                        ${currentGallery ? 'opacity-100' : 'opacity-0'}
+                    `}>
+                        <CustomImage 
+                            src={selectedImage?.imageUrl}
+                            alt={selectedImage?.description || 'main photo'}
+                        />
+                    </div>
                 </div>
-                <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 md:gap-8 lg:gap-12'>
-                    {menuItems}
-                </div>
-                <div className={`
-                    w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 border-2 border-transparent
-                    pointer-events-none transition-opacity duration-500
-                    ${currentGallery ? 'opacity-100' : 'opacity-0'}
-                `}>
-                    <CustomImage 
-                        src={selectedImage?.imageUrl}
-                        alt={selectedImage?.description || 'main photo'}
-                    />
-                </div>
-            </div>
-            <div className='w-full'>
-                <div className={`
-                    px-2 w-full max-w-xl h-24 mx-auto transition-opacity duration-500
-                    ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
-                `}>
-                    <Carousel gallery={currentGallery?.name}>
-                        {carouselItems}
-                    </Carousel>
+                <div className='w-full'>
+                    <div className={`
+                        px-2 w-full max-w-xl h-24 mx-auto transition-opacity duration-500
+                        ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
+                    `}>
+                        <Carousel gallery={currentGallery?.name}>
+                            {carouselItems}
+                        </Carousel>
+                    </div>
                 </div>
             </div>
         </div>
