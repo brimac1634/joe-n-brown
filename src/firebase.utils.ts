@@ -14,9 +14,9 @@ const config = {
 
 export interface GalleryItem {
     id?: string;
-    imagePath: string;
+    image: string;
     imageUrl?: string;
-    description: string;
+    thumbnailUrl?: string;
     gallery: string;
     date: Date;
 }
@@ -38,12 +38,13 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
         const promises = snapshot.docs.map(async (doc): Promise<GalleryItem> => {
             const item = doc.data() as GalleryItem;
             item.id = doc.id;
-            item.imageUrl = await storageRef.child(item.imagePath).getDownloadURL();
+            item.imageUrl = await storageRef.child(`${item.gallery}/${item.image}`).getDownloadURL();
+            item.thumbnailUrl = await storageRef.child(`${item.gallery}/thumbnails/${item.image}`).getDownloadURL();
             
             return item;
         })
         const galleryItems = await Promise.all(promises);
-
+        
         galleryItems.forEach(item => {
             if (!galleryMap[item.gallery]) {
                 galleryMap[item.gallery] = {

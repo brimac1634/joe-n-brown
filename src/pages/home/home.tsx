@@ -154,8 +154,8 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     onClick={()=>setSelectedImage(item)}
                 >
                     <CustomImage 
-                        src={item.imageUrl} 
-                        alt={item.description}
+                        src={item.thumbnailUrl} 
+                        alt={item.image}
                         objectFit='object-cover'
                     />
                 </div>
@@ -182,7 +182,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     `}>
                         <CustomImage 
                             src={selectedImage?.imageUrl}
-                            alt={selectedImage?.description || 'main photo'}
+                            alt={selectedImage?.image || 'main photo'}
                         />
                     </div>
                 </div>
