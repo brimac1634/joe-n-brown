@@ -34,7 +34,7 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
     const galleryMap: GalleryGroup = {};
     try {
         const galleryRef = await firestore.collection('gallery');
-        const snapshot = await galleryRef.orderBy('date', 'desc').get();
+        const snapshot = await galleryRef.orderBy('image', 'asc').get();
         const promises = snapshot.docs.map(async (doc): Promise<GalleryItem> => {
             const item = doc.data() as GalleryItem;
             item.id = doc.id;
@@ -44,7 +44,7 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
             return item;
         })
         const galleryItems = await Promise.all(promises);
-        
+        console.log(galleryItems);
         galleryItems.forEach(item => {
             if (!galleryMap[item.gallery]) {
                 galleryMap[item.gallery] = {
