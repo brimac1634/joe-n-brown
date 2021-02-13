@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './components/header/header';
@@ -19,7 +19,7 @@ function App() {
     if (screenSize.height !== windowHeight) {
       setWindowHeight(screenSize.height);
     }
-  }, [screenSize])
+  }, [screenSize, windowHeight])
   
   return (
     <div 

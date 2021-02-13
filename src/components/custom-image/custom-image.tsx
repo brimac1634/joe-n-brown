@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-
-// import { usePrevious } from '../../utils';
+import { useState } from 'react';
 
 export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
     src: string | undefined;
@@ -11,14 +9,6 @@ export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageEleme
  
 const CustomImage: React.FC<CustomImageProps> = ({ src, alt, objectFit = 'object-contain', onLoad, ...props }) => {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
-    // const previousSrc = usePrevious<string>(src);
-
-    // useEffect(() => {
-    //     console.log(previousSrc, src)
-    //     if (previousSrc !== src) {
-    //         setImageLoaded(false);
-    //     }
-    // }, [previousSrc, src])
 
     return ( 
         <img 

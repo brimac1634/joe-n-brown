@@ -10,8 +10,8 @@ type TParams = { gallery: string };
 
 enum GalleryEnum {
     illustrations = 'illustrations',
+    'creatures and characters' = 'creatures and characters',
     concepts = 'concepts',
-    sketches = 'sketches'
 }
 
 export interface HomeProps {
@@ -52,11 +52,11 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 case GalleryEnum.illustrations:
                     selectedGallery = GalleryEnum.illustrations;
                     break;
+                case GalleryEnum['creatures and characters']:
+                    selectedGallery = GalleryEnum['creatures and characters'];
+                    break;
                 case GalleryEnum.concepts:
                     selectedGallery = GalleryEnum.concepts;
-                    break;
-                case GalleryEnum.sketches:
-                    selectedGallery = GalleryEnum.sketches;
                     break;
             }
 
@@ -82,7 +82,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 <Link 
                     key={item}
                     to={`/${item}`} 
-                    className='flex justify-center mb-3'
+                    className='flex justify-center mb-3 md:mb-4 md:mt-2'
                 >
                     <span className={`
                         text-center text-sm md:text-lg lg:text-xl font-semibold px-2 capitalize border-2 border-black transition duration-500 
@@ -95,7 +95,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
             );
         }
         return items;
-    }, [GalleryEnum, currentGallery]);
+    }, [currentGallery]);
 
     const menuItems: React.ReactElement[] = useMemo(() => {
         const items: React.ReactElement[] = [];
