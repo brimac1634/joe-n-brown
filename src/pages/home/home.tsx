@@ -10,7 +10,7 @@ type TParams = { gallery: string };
 
 enum GalleryEnum {
     illustrations = 'illustrations',
-    'creatures and characters' = 'creatures and characters',
+    characters = 'characters',
     concepts = 'concepts',
 }
 
@@ -52,8 +52,8 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 case GalleryEnum.illustrations:
                     selectedGallery = GalleryEnum.illustrations;
                     break;
-                case GalleryEnum['creatures and characters']:
-                    selectedGallery = GalleryEnum['creatures and characters'];
+                case GalleryEnum.characters:
+                    selectedGallery = GalleryEnum.characters;
                     break;
                 case GalleryEnum.concepts:
                     selectedGallery = GalleryEnum.concepts;
