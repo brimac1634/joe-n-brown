@@ -119,7 +119,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                             border-2 border-black w-full 
                             overflow-hidden transition-opacity duration-500
                             ${!currentGallery ? 'opacity-100' : 'opacity-0 pointer-events-none cursor-default'}
-                            ${galleryImagesLoaded.size === 3 ? 'bg-transparent' : 'bg-gray-300 animate-pulse'}
+                            ${galleryImagesLoaded.size === 3 ? '' : 'animate-pulse'}
                         `}
                     >
                         <div 
@@ -131,8 +131,9 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                                 !!galleryGroup &&
                                 <CustomImage 
                                     src={require(`../../assets/images/${item}.jpg`).default}
+                                    overlay={require(`../../assets/images/${item}-thumbnail.jpg`).default}
                                     alt={item}
-                                    onLoad={()=>updateGalleryImagesLoaded(item as GalleryEnum)}
+                                    onOverlayLoad={()=>updateGalleryImagesLoaded(item as GalleryEnum)}
                                     objectFit='object-cover'
                                 />
                             }
@@ -190,6 +191,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     `}>
                         <CustomImage 
                             src={currentGallery?.items[index].imageUrl}
+                            overlay={currentGallery?.items[index].thumbnailUrl}
                             alt={currentGallery?.items[index].image || 'main photo'}
                         />
                     </div>
