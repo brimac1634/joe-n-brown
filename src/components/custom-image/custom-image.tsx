@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-    src: string | undefined;
+    src: string | undefined | any;
     alt: string;
     objectFit?: 'object-contain' | 'object-cover';
     onLoad?: () => void;

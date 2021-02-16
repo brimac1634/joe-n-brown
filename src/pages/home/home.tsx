@@ -6,6 +6,8 @@ import CustomImage from '../../components/custom-image/custom-image';
 
 import { getGalleries, GalleryGroup, GalleryItem, Gallery } from '../../firebase.utils';
 
+import characters from '../../assets/images/characters.jpg';
+
 type TParams = { gallery: string };
 
 enum GalleryEnum {
@@ -122,7 +124,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                             {
                                 !!galleryGroup &&
                                 <CustomImage 
-                                    src={galleryGroup[item]?.items[0]?.imageUrl || ''}
+                                    src={require(`../../assets/images/${item}.jpg`).default}
                                     alt={item}
                                     onLoad={()=>updateGalleryImagesLoaded(item as GalleryEnum)}
                                     objectFit='object-cover'
