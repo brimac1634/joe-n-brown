@@ -21,12 +21,13 @@ export interface HomeProps {
 }
  
 const Home = ({ match }: RouteComponentProps<TParams>) => {
+    const [index, setIndex] = useState<number>(0);
     const [galleryGroup, setGalleryGroup] = useState<GalleryGroup | null>(null);
     const [isLoadingGallery, setIsLoadingGallery] = useState<boolean>(false);
     const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<GalleryEnum>>(new Set());
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
-    const [selectedImage, setSelectedImage] = useState<GalleryItem | undefined>(undefined);
+    // const [selectedImage, setSelectedImage] = useState<GalleryItem | undefined>(undefined);
 
     const gallery = match.params.gallery;
 
@@ -47,6 +48,12 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         fetchGalleries();
     }, [])
 
+    // useEffect(() => {
+    //     if (currentGallery) {
+    //         setSelectedImage(currentGallery.items[index]);
+    //     }
+    // }, [currentGallery,setSelectedImage, index])
+
     useEffect(() => {
         if (galleryImagesLoaded.size === 3) {
             let selectedGallery: GalleryEnum | null = null;
@@ -64,10 +71,9 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
 
             if(!!!selectedGallery) {
                 setCurrentGallery(null);
-                setSelectedImage(undefined);
             } else if (!!galleryGroup) {
                 setCurrentGallery(galleryGroup[selectedGallery]);
-                setSelectedImage(galleryGroup[selectedGallery].items[0]);
+                setIndex(0);
             }
         }
     }, [galleryImagesLoaded, gallery, galleryGroup]);
@@ -151,9 +157,9 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 <div 
                     className={`
                         w-full h-full border-2 border-black transition duration-500 overflow-hidden cursor-pointer
-                        ${selectedImage?.id === item.id ? 'border-opacity-100' : 'border-opacity-0'}
+                        ${index === i ? 'border-opacity-100' : 'border-opacity-0'}
                     `}
-                    onClick={()=>setSelectedImage(item)}
+                    onClick={()=>setIndex(i)}
                 >
                     <CustomImage 
                         src={item.thumbnailUrl} 
@@ -165,7 +171,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         ))
         
         return items;
-    }, [currentGallery, selectedImage]);
+    }, [currentGallery, index]);
 
     return ( 
         <div className='w-full flex'>
@@ -183,8 +189,8 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                         ${currentGallery ? 'opacity-100' : 'opacity-0'}
                     `}>
                         <CustomImage 
-                            src={selectedImage?.imageUrl}
-                            alt={selectedImage?.image || 'main photo'}
+                            src={currentGallery?.items[index].imageUrl}
+                            alt={currentGallery?.items[index].image || 'main photo'}
                         />
                     </div>
                 </div>
@@ -193,7 +199,11 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                         px-2 w-full max-w-xl h-24 mx-auto transition-opacity duration-500
                         ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
                     `}>
-                        <Carousel gallery={currentGallery?.name}>
+                        <Carousel 
+                            index={index}
+                            gallery={currentGallery?.name}
+                            onIndexChange={(index) => setIndex(index)}
+                        >
                             {carouselItems}
                         </Carousel>
                     </div>

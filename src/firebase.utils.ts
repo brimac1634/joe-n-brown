@@ -44,7 +44,7 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
             return item;
         })
         const galleryItems = await Promise.all(promises);
-        console.log(galleryItems);
+        
         galleryItems.forEach(item => {
             if (!galleryMap[item.gallery]) {
                 galleryMap[item.gallery] = {
