@@ -18,7 +18,7 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, overlay, alt, objectFit 
     }, [src])
 
     return ( 
-        <div className='w-full h-full flex justify-center relative'>
+        <div className='w-full h-full relative'>
             <img 
                 src={src}
                 alt={alt}
@@ -29,7 +29,7 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, overlay, alt, objectFit 
                     }
                 }}
                 className={`
-                    transition-opacity duration-500 
+                    transition-opacity duration-500 mx-auto
                     ${!src && 'hidden'}
                     ${(imageLoaded || overlay) && 'opacity-100'}
                     ${!imageLoaded && !overlay && 'opacity-0'}
