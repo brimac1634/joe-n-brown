@@ -21,13 +21,13 @@ const Footer: React.FC<FooterProps> = () => {
                 >
                     <Instagram className='w-5 h-5 mx-2 my-1' />
                 </a>
-                {/* <a 
-                    href='' 
+                <a 
+                    href='https://www.facebook.com/joenbrownart' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >
                     <Facebook className='w-5 h-5 mx-2 my-1' />
-                </a> */}
+                </a>
                 <a 
                     href='https://www.artstation.com/joenbrown' 
                     target='_blank' 
