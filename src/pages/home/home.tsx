@@ -175,7 +175,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     }, [currentGallery, index]);
 
     return ( 
-        <div className='w-full flex'>
+        <div className='w-full flex select-none'>
             <div className='w-full max-w-6xl flex flex-col mx-auto'>
                 <div className='h-full flex flex-col py-1 px-3 md:px-8 lg:px-12 relative'>
                     <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
@@ -198,7 +198,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 </div>
                 <div className='w-full'>
                     <div className={`
-                        px-2 w-full max-w-xl h-24 mx-auto transition-opacity duration-500
+                        px-2 w-full max-w-4xl h-24 mx-auto transition-opacity duration-500
                         ${!!currentGallery ? 'opacity-100' : 'opacity-0'}
                     `}>
                         <Carousel 
