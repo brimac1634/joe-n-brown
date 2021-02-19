@@ -23,7 +23,7 @@ export interface HomeProps {
 const Home = ({ match }: RouteComponentProps<TParams>) => {
     const [index, setIndex] = useState<number>(0);
     const [galleryGroup, setGalleryGroup] = useState<GalleryGroup | null>(null);
-    const [isLoadingGallery, setIsLoadingGallery] = useState<boolean>(false);
+    const [error, setError] = useState<string | undefined>(undefined);
     const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<GalleryEnum>>(new Set());
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
@@ -32,15 +32,11 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     const gallery = match.params.gallery;
 
     async function fetchGalleries(): Promise<void> {
-        setIsLoadingGallery(true);
         try {
             const galleryGroup = await getGalleries();
             setGalleryGroup(galleryGroup);
         } catch(err) {
-            console.log(err);
-            // show error if nothing loads
-        } finally {
-            setIsLoadingGallery(false);
+            setError('Uh oh, we failed to fetch the gallery. Please try again soon.')
         }
     }
 
@@ -176,7 +172,12 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
 
     return ( 
         <div className='w-full flex select-none'>
-            <div className='w-full max-w-6xl flex flex-col mx-auto'>
+            {
+                error
+                ?   <div className='w-full h-full flex justify-center items-center'>
+                        <span className='font-bold'>{error}</span>
+                    </div>
+                :   <div className='w-full max-w-6xl flex flex-col mx-auto'>
                 <div className='h-full flex flex-col py-1 px-3 md:px-8 lg:px-12 relative'>
                     <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
                         {menuButtons}
@@ -211,6 +212,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     </div>
                 </div>
             </div>
+            }
         </div>
      );
 }

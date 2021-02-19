@@ -34,20 +34,36 @@ export interface GalleryGroup {
 
 export const getGalleries = async (): Promise<GalleryGroup> => {
     const galleryMap: GalleryGroup = {};
+    let snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
+
     try {
         const galleryRef = await firestore.collection('gallery');
-        const snapshot = await galleryRef.orderBy('image', 'asc').get();
-        const promises = snapshot.docs.map(async (doc): Promise<GalleryItem> => {
+        snapshot = await galleryRef.orderBy('image', 'asc').get();
+    } catch(err) {
+        console.log(err);
+        throw err;
+    }
+
+    const promises = snapshot.docs.map(async (doc): Promise<GalleryItem | undefined> => {
+        try {
             const item = doc.data() as GalleryItem;
+            
             item.id = doc.id;
             item.imageUrl = await storageRef.child(`${item.gallery}/${item.image}`).getDownloadURL();
             item.thumbnailUrl = await storageRef.child(`${item.gallery}/thumbnails/${item.image}`).getDownloadURL();
             
-            return item;
-        })
+            return item
+        } catch(err) {
+            console.log(err);
+            return undefined;
+        }
+    })
+
+    try {
         const galleryItems = await Promise.all(promises);
-        
+
         galleryItems.forEach(item => {
+            if (!item) return;
             if (!galleryMap[item.gallery]) {
                 galleryMap[item.gallery] = {
                     name: item.gallery,
@@ -57,18 +73,21 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
                 galleryMap[item.gallery].items.push(item);
             }
         })
-        return galleryMap;
     } catch(err) {
+        console.log(err);
         throw err;
     }
+    // console.log(galleryMap);
+    
+    return galleryMap;
     
 }
 
-const app = firebase.initializeApp(config);
+firebase.initializeApp(config);
 
-export const firestore = app.firestore();
-export const storageRef = app.storage().ref();
-export const analytics = app.analytics();
+export const firestore = firebase.firestore();
+export const storageRef = firebase.storage().ref();
+export const analytics = firebase.analytics();
 
 
-export default app;
+export default firebase;
