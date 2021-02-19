@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = () => {
     const location = useLocation();
     
     return ( 
-        <footer className='w-full py-2 flex-shrink-0 flex flex-col items-center text-lg'>
+        <footer className='w-full py-2 flex-shrink-0 flex flex-col items-center text-lg relative'>
             <div className='flex justify-center'>
                 <a 
                     href='https://www.instagram.com/joenbrown' 
@@ -57,6 +57,14 @@ const Footer: React.FC<FooterProps> = () => {
                 ?   <Link to='/' className='my-1'>Gallery</Link>
                 :   <Link to='/contact' className='my-1'>Contact</Link>
             }
+            <a 
+                href='https://bmacpherson.com' 
+                target='_blank' 
+                rel='noopener noreferrer'
+                className='bottom-0 right-0 absolute block text-right text-xs font-thin px-1'
+            >
+                built by bmacpherson.com
+            </a>
         </footer>
      );
 }
