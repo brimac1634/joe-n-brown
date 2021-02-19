@@ -96,12 +96,15 @@ const Carousel: React.FC<CarouselProps> = ({ children, gallery, onIndexChange, i
             {
                 childrenBlocks &&
                 <div 
-                    className={`absolute left-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index <= 0 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
+                    className={`absolute left-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${children.length <= 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
                     <div 
                         className='rounded-full w-12 h-12 bg-gray-100 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
                         onClick={() => {
-                            if (onIndexChange){
+                            if (!onIndexChange) return;
+                            if (index === 0) {
+                                onIndexChange(children.length - 1);
+                            } else {
                                 onIndexChange(index - 1);
                             }
                         }}
@@ -113,12 +116,15 @@ const Carousel: React.FC<CarouselProps> = ({ children, gallery, onIndexChange, i
             {
                 childrenBlocks &&
                 <div 
-                    className={`absolute right-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${index >= children.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
+                    className={`absolute right-0 top-0 bottom-0 px-2 flex items-center transition duration-300 ${children.length <= 1 ? 'opacity-0 pointer-events-none' : 'opacity-1'}`}
                 >
                     <div 
                         className='rounded-full w-12 h-12 bg-gray-100 flex justify-center items-center hover:shadow-md cursor-pointer transition-shadow duration-300' 
                         onClick={() => {
-                            if (onIndexChange) {
+                            if (!onIndexChange) return;
+                            if (index === children.length - 1) {
+                                onIndexChange(0);
+                            } else {
                                 onIndexChange(index + 1);
                             }
                         }}

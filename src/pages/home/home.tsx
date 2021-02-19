@@ -164,7 +164,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                 >
                     <CustomImage 
                         src={item.thumbnailUrl} 
-                        alt={item.image}
+                        alt={item.alt || item.image}
                         objectFit='object-cover'
                     />
                 </div>

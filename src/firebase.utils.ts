@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
+import "firebase/analytics";
 
 const config = {
     apiKey: "AIzaSyDRyB33YlfcRgatGk61DZHQXABCCoERo7Q",
@@ -18,6 +19,7 @@ export interface GalleryItem {
     imageUrl?: string;
     thumbnailUrl?: string;
     gallery: string;
+    alt?: string;
     date: Date;
 }
 
@@ -55,7 +57,6 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
                 galleryMap[item.gallery].items.push(item);
             }
         })
-        
         return galleryMap;
     } catch(err) {
         throw err;
@@ -63,10 +64,11 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
     
 }
 
-firebase.initializeApp(config);
+const app = firebase.initializeApp(config);
 
-export const firestore = firebase.firestore();
-export const storageRef = firebase.storage().ref();
+export const firestore = app.firestore();
+export const storageRef = app.storage().ref();
+export const analytics = app.analytics();
 
 
-export default firebase;
+export default app;
