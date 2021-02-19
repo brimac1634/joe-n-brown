@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { ReactComponent as Instagram } from '../../assets/icons/instagram.svg';
 import { ReactComponent as Facebook } from '../../assets/icons/facebook.svg';
@@ -11,6 +11,8 @@ export interface FooterProps {
 }
  
 const Footer: React.FC<FooterProps> = () => {
+    const location = useLocation();
+    
     return ( 
         <footer className='w-full py-2 flex-shrink-0 flex flex-col items-center text-lg'>
             <div className='flex justify-center'>
@@ -22,7 +24,7 @@ const Footer: React.FC<FooterProps> = () => {
                     <Instagram className='w-5 h-5 mx-2 my-1' />
                 </a>
                 <a 
-                    href='https://www.facebook.com/joenbrownart' 
+                    href='https://www.facebook.com/Joe-N-Brown-Art-100221205449960' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >
@@ -50,7 +52,11 @@ const Footer: React.FC<FooterProps> = () => {
                     <Twitch className='w-5 h-5 mx-2 my-1' />
                 </a>
             </div>
-            <Link to='/contact' className='my-1'>Contact</Link>
+            {
+                location.pathname.slice(1, location.pathname.length) === 'contact'
+                ?   <Link to='/' className='my-1'>Gallery</Link>
+                :   <Link to='/contact' className='my-1'>Contact</Link>
+            }
         </footer>
      );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Header from './components/header/header';
@@ -13,6 +13,9 @@ import './App.css';
 
 function App() {
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
+  const [bodyHeight, setBodyHeight] = useState<number>(0);
+  const header = useRef<HTMLDivElement>(null);
+  const footer = useRef<HTMLDivElement>(null);
   const screenSize = useWindowSize();
 
   useEffect(() => {
@@ -20,14 +23,24 @@ function App() {
       setWindowHeight(screenSize.height);
     }
   }, [screenSize, windowHeight])
+
+  useEffect(() => {
+    if (!!header?.current && !!footer?.current) {
+        const headerRect = header.current.getBoundingClientRect();
+        const footerRect = footer.current.getBoundingClientRect();
+        setBodyHeight(screenSize.height - headerRect.height - footerRect.height);
+    }
+}, [header, footer, screenSize])
   
   return (
     <div 
       className="w-full h-screen overflow-hidden flex flex-col bg-coolGray-50"
       style={{height: window.innerHeight}}
     >
-      <Header />
-      <div className='flex-grow flex'>
+      <div ref={header}>
+        <Header />
+      </div>
+      <div className='flex-grow flex' style={{ height: bodyHeight }}>
         {/* <ErrorBoundary>
           <Suspense fallback={<span>loading</span>}> */}
             <Switch>
@@ -38,7 +51,9 @@ function App() {
           {/* </Suspense>
         </ErrorBoundary> */}
       </div>
-      <Footer />
+      <div ref={footer}>
+        <Footer />
+      </div>
     </div>
   );
 }

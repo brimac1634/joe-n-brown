@@ -4,9 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import Carousel from '../../components/carousel/carousel';
 import CustomImage from '../../components/custom-image/custom-image';
 
-import { getGalleries, GalleryGroup, GalleryItem, Gallery } from '../../firebase.utils';
-
-import characters from '../../assets/images/characters.jpg';
+import { getGalleries, GalleryGroup, Gallery } from '../../firebase.utils';
 
 type TParams = { gallery: string };
 
@@ -27,7 +25,6 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     const [galleryImagesLoaded, setGalleryImagesLoaded] = useState<Set<GalleryEnum>>(new Set());
 
     const [currentGallery, setCurrentGallery] = useState<Gallery | null>(null);
-    // const [selectedImage, setSelectedImage] = useState<GalleryItem | undefined>(undefined);
 
     const gallery = match.params.gallery;
 
