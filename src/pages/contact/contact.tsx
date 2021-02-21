@@ -12,7 +12,7 @@ const Contact: React.FC<ContactProps> = () => {
                     I’m a freelance artist based in Hong Kong. Though my personal focus is on fantasy and science fiction illustrations and concept art, I am more than happy to create a portrait of you, your family, friends and pets. I would be even happier to put them in costumes and alongside their favourite characters or universes. Maybe you’ve had an idea of a character or world you’d be interested in bringing to life through concept sketches. If you’re interested, take a look at the price list below, and contact me for further inquiries.
                 </p>
                 <a 
-                    href='https://scontent-hkt1-1.xx.fbcdn.net/v/t1.0-9/189750_4499086084_5436_n.jpg?_nc_cat=109&ccb=3&_nc_sid=de6eea&_nc_ohc=VRck4nFMCJYAX_glh1T&_nc_ht=scontent-hkt1-1.xx&oh=cdaacf544813422c0acff1101905af13&oe=6056F3E8' 
+                    href='https://firebasestorage.googleapis.com/v0/b/joenbrown-cc8e7.appspot.com/o/JoeNBrownArtPriceList.pdf?alt=media&token=2ff89764-759b-45b1-ac42-15b032dcac6c' 
                     target='_blank' 
                     rel='noopener noreferrer'
                     className='block text-center font-semibold my-7'

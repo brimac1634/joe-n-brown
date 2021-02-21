@@ -17,7 +17,7 @@ const Footer: React.FC<FooterProps> = () => {
         <footer className='w-full py-2 flex-shrink-0 flex flex-col items-center text-lg relative'>
             <div className='flex justify-center'>
                 <a 
-                    href='https://www.instagram.com/joenbrown' 
+                    href='https://www.instagram.com/joenbrownart/' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >
@@ -31,21 +31,21 @@ const Footer: React.FC<FooterProps> = () => {
                     <Facebook className='w-5 h-5 mx-2 my-1' />
                 </a>
                 <a 
-                    href='https://www.artstation.com/joenbrown' 
+                    href='https://www.artstation.com/joenbrownart' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >
                     <ArtStation className='w-5 h-5 mx-2 my-1' />
                 </a>
                 <a 
-                    href='https://www.youtube.com/channel/UCuIst_X7MTYewGyLEU_0H1Q' 
+                    href='https://www.youtube.com/channel/UCj_8-vYTycnMf-PnspsJ1iA' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >
                     <Youtube className='w-5 h-5 mx-2 my-1' />
                 </a>
                 <a 
-                    href='https://m.twitch.tv/joenbrown/profile' 
+                    href='https://twitch.tv/joenbrownart' 
                     target='_blank' 
                     rel='noopener noreferrer'
                 >

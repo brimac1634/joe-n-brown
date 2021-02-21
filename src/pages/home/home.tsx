@@ -136,7 +136,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
             );
         }
         return items;
-    }, [galleryGroup, GalleryEnum, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
+    }, [galleryGroup, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
     
     const carouselItems: React.ReactElement[] = useMemo(() => {
         if (!currentGallery) return [];
