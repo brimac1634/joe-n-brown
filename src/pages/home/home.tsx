@@ -71,10 +71,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
         }
     }, [galleryImagesLoaded, gallery, galleryGroup]);
 
-    function updateGalleryImagesLoaded(image: GalleryEnum) {
-        const gallery = new Set(galleryImagesLoaded).add(image);
-        setGalleryImagesLoaded(gallery);
-    }
+
 
     const menuButtons: React.ReactElement[] = useMemo(() => {
         const items: React.ReactElement[] = [];
@@ -99,6 +96,12 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
     }, [currentGallery]);
 
     const menuItems: React.ReactElement[] = useMemo(() => {
+
+        function updateGalleryImagesLoaded(image: GalleryEnum) {
+            const gallery = new Set(galleryImagesLoaded).add(image);
+            setGalleryImagesLoaded(gallery);
+        }
+
         const items: React.ReactElement[] = [];
         for (let item in GalleryEnum) {
             items.push(
@@ -136,7 +139,7 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
             );
         }
         return items;
-    }, [galleryGroup, currentGallery, galleryImagesLoaded, updateGalleryImagesLoaded]);
+    }, [galleryGroup, currentGallery, galleryImagesLoaded]);
     
     const carouselItems: React.ReactElement[] = useMemo(() => {
         if (!currentGallery) return [];

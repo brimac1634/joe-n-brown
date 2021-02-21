@@ -20,6 +20,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href='https://www.instagram.com/joenbrownart/' 
                     target='_blank' 
                     rel='noopener noreferrer'
+                    aria-label="Instagram"
                 >
                     <Instagram className='w-5 h-5 mx-2 my-1' />
                 </a>
@@ -27,6 +28,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href='https://www.facebook.com/Joe-N-Brown-Art-100221205449960' 
                     target='_blank' 
                     rel='noopener noreferrer'
+                    aria-label="Facebook"
                 >
                     <Facebook className='w-5 h-5 mx-2 my-1' />
                 </a>
@@ -34,6 +36,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href='https://www.artstation.com/joenbrownart' 
                     target='_blank' 
                     rel='noopener noreferrer'
+                    aria-label="ArtStation"
                 >
                     <ArtStation className='w-5 h-5 mx-2 my-1' />
                 </a>
@@ -41,6 +44,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href='https://www.youtube.com/channel/UCj_8-vYTycnMf-PnspsJ1iA' 
                     target='_blank' 
                     rel='noopener noreferrer'
+                    aria-label="Youtube"
                 >
                     <Youtube className='w-5 h-5 mx-2 my-1' />
                 </a>
@@ -48,6 +52,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href='https://twitch.tv/joenbrownart' 
                     target='_blank' 
                     rel='noopener noreferrer'
+                    aria-label="Twitch"
                 >
                     <Twitch className='w-5 h-5 mx-2 my-1' />
                 </a>

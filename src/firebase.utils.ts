@@ -73,10 +73,8 @@ export const getGalleries = async (): Promise<GalleryGroup> => {
             }
         })
     } catch(err) {
-        console.log(err);
         throw err;
     }
-    // console.log(galleryMap);
     
     return galleryMap;
     
