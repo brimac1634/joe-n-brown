@@ -11,34 +11,40 @@ export interface CustomImageProps extends React.ImgHTMLAttributes<HTMLImageEleme
  
 const CustomImage: React.FC<CustomImageProps> = ({ src, overlay, alt, objectFit = 'object-contain', onLoad, onOverlayLoad, ...props }) => {
     const [imageLoaded, setImageLoaded] = useState<boolean>(false);
+    // const [renderImage, setRenderImage] = useState<boolean>(false);
     const [overlayLoaded, setOverlayLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        setImageLoaded(false);
-    }, [src])
+        if (overlay) {
+            setImageLoaded(false);
+        }
+    }, [src, overlay])
 
     return ( 
         <div className='w-full h-full relative'>
-            <img 
-                src={src}
-                alt={alt}
-                onLoad={() => {
-                    setImageLoaded(true);
-                    if (!!onLoad) {
-                        onLoad();
-                    }
-                }}
-                className={`
-                    transition-opacity duration-500 mx-auto
-                    ${!src && 'hidden'}
-                    ${(imageLoaded || overlay) && 'opacity-100'}
-                    ${!imageLoaded && !overlay && 'opacity-0'}
-                    ${objectFit === 'object-contain' && 'object-contain h-full max-w-full'}
-                    ${objectFit === 'object-cover' && 'object-cover min-h-full min-w-full'}
-                `}
-                key={src}
-                {...props}
-            />
+            {
+                (!overlay || (overlay && overlayLoaded)) &&
+                <img 
+                    src={src}
+                    alt={alt}
+                    onLoad={() => {
+                        setImageLoaded(true);
+                        if (!!onLoad) {
+                            onLoad();
+                        }
+                    }}
+                    className={`
+                        transition-opacity duration-500 mx-auto
+                        ${!src && 'hidden'}
+                        ${(imageLoaded || overlay) && 'opacity-100'}
+                        ${!imageLoaded && !overlay && 'opacity-0'}
+                        ${objectFit === 'object-contain' && 'object-contain h-full max-w-full'}
+                        ${objectFit === 'object-cover' && 'object-cover min-h-full min-w-full'}
+                    `}
+                    key={src}
+                    {...props}
+                />
+            }
             {
                 overlay &&
                 <img 
