@@ -59,7 +59,7 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, overlay, alt, objectFit 
                     className={`
                         absolute top-0 bottom-0 left-1/2
                         transform -translate-x-2/4
-                        transition-opacity duration-1000
+                        transition-opacity duration-1000 pointer-events-none
                         ${(imageLoaded || !overlayLoaded) ? 'opacity-0' : 'opacity-100'}
                         ${objectFit === 'object-contain' && 'object-contain h-full max-w-full'}
                         ${objectFit === 'object-cover' && 'object-cover min-h-full min-w-full'}

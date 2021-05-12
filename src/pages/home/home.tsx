@@ -182,19 +182,21 @@ const Home = ({ match }: RouteComponentProps<TParams>) => {
                     <div className='w-full grid grid-cols-3 gap-3 md:gap-8 lg:gap-12'>
                         {menuButtons}
                     </div>
-                    <div className='w-full grid grid-cols-3 flex-1 z-1 gap-3 md:gap-8 lg:gap-12'>
+                    <div className='w-full grid grid-cols-3 flex-1 gap-3 md:gap-8 lg:gap-12'>
                         {menuItems}
                     </div>
                     <div className={`
                         w-full h-full absolute top-0 left-0 flex justify-center p-1 pt-12 md:px-8 lg:px-12 border-2 border-transparent
-                        pointer-events-none transition-opacity duration-500
+                        transition-opacity duration-500 pointer-events-none
                         ${currentGallery ? 'opacity-100' : 'opacity-0'}
                     `}>
-                        <CustomImage 
-                            src={currentGallery?.items[index].imageUrl}
-                            overlay={currentGallery?.items[index].thumbnailUrl}
-                            alt={currentGallery?.items[index].image || 'main photo'}
-                        />
+                        <div className='pointer-events-auto'>
+                            <CustomImage 
+                                src={currentGallery?.items[index].imageUrl}
+                                overlay={currentGallery?.items[index].thumbnailUrl}
+                                alt={currentGallery?.items[index].image || 'main photo'}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className='w-full'>
